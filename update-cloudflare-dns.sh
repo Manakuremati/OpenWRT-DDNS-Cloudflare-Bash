@@ -28,8 +28,8 @@ else
 fi
 
 ### Check validity of "ttl" parameter
-if [ "${ttl}" -lt 120 ] || [ "${ttl}" -gt 7200 ] && [ "${ttl}" -ne 1 ]; then
-  echo "Error! ttl out of range (120-7200) or not set to 1"
+if [ "${ttl}" -lt 60 ] || [ "${ttl}" -gt 7200 ] && [ "${ttl}" -ne 1 ]; then
+  echo "Error! ttl out of range (60-7200) or not set to 1"
   exit
 fi
 
@@ -39,32 +39,20 @@ if [ "${proxied}" != "false" ] && [ "${proxied}" != "true" ]; then
   exit 0
 fi
 
-### Check validity of "what_ip" parameter
-if [ "${what_ip}" != "external" ] && [ "${what_ip}" != "internal" ]; then
-  echo 'Error! Incorrect "what_ip" parameter, choose "external" or "internal"'
-  exit 0
-fi
-
-### Check if set to internal ip and proxy
-if [ "${what_ip}" == "internal" ] && [ "${proxied}" == "true" ]; then
-  echo 'Error! Internal IP cannot be proxied'
-  exit 0
-fi
-
 ### Valid IPv4 Regex
 REIP='^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])\.){3}(25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])$'
 
 ### Get external ip from https://checkip.amazonaws.com
 ip=$(ifstatus wan |  jsonfilter -e '@["ipv4-address"][0].address')
   if [ -z "$ip" ]; then
-    echo "Error! Can't get external ip
+    echo "Error! Can't get ip
     exit 0
   fi
   if ! [[ "$ip" =~ $REIP ]]; then
     echo "Error! IP Address returned was invalid!"
     exit 0
   fi
-echo "==> External IP is: $ip"
+echo "==> IP is: $ip"
 
 ### Build coma separated array fron dns_record parameter to update multiple A records
 IFS=',' read -d '' -ra dns_records <<<"$dns_record,"
