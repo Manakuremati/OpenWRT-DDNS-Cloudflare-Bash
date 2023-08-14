@@ -159,20 +159,4 @@ for record in "${dns_records[@]}"; do
 
   echo "==> Success!"
   echo "==> $record DNS Record updated to: $ip, ttl: $ttl, proxied: $proxied"
-
-  ### Telegram notification
-  if [ ${notify_me_telegram} == "no" ]; then
-    exit 0
-  fi
-
-  if [ ${notify_me_telegram} == "yes" ]; then
-    telegram_notification=$(
-      curl -s -X GET "https://api.telegram.org/bot${telegram_bot_API_Token}/sendMessage?chat_id=${telegram_chat_id}" --data-urlencode "text=${record} DNS record updated to: ${ip}"
-    )
-    if [[ ${telegram_notification=} == *"\"ok\":false"* ]]; then
-      echo ${telegram_notification=}
-      echo "Error! Telegram notification failed"
-      exit 0
-    fi
-  fi
 done
