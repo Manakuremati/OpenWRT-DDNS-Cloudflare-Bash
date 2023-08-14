@@ -39,20 +39,6 @@ Place the **config** file in the directory as the **update-cloudflare-dns**
 
 ## Running The Script
 
-When placed in _/usr/local/bin/_
-
-```shell
-update-cloudflare-dns
-```
-
-With your config file (need to be placed in same folder)
-
-```shell
-update-cloudflare-dns yoru_config.conf
-```
-
-Or manually
-
 ```shell
 <path>/.update-cloudflare-dns.sh
 ```
@@ -70,13 +56,7 @@ crontab -e
 Run every minute
 
 ```shell
-* * * * * /usr/local/bin/update-cloudflare-dns
-```
-
-Run with your specific config file
-
-```shell
-* * * * * /usr/local/bin/update-cloudflare-dns myconfig.conf
+* * * * * /path/to/script/update-cloudflare-dns.sh
 ```
 
 Run every 2 minutes
@@ -111,36 +91,13 @@ Log file will be located at the script's location.
 Example:
 
 ```bash
-/usr/local/bin/update-cloudflare-dns.log
+/path/to/script/update-cloudflare-dns.log
 ```
 
 ## Limitations
 
 - Does not support IPv6
 
-## License
-
-### MIT License
-
-Copyright© 3os.org @2020
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to
-deal in the Software without restriction, including without limitation the
-rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-sell copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-IN THE SOFTWARE.
 
 <!-- urls -->
 <!-- appendices -->
