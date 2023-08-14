@@ -1,19 +1,9 @@
-# DDNS Cloudflare Bash Script
-
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/fire1ce/3os.org/tree/master/src)
-[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://mit-license.org/)
-
-## About
-
-- DDNS Cloudflare Bash Script for most **Linux**, **Unix** distributions and **MacOS**.
-- Choose any source IP address to update **external** or **internal** _(WAN/LAN)_.
-- For multiply lan interfaces like Wifi, Docker Networks and Bridges the script will automatically detects the primary Interface by priority.
-- Cloudflare's options proxy and TTL configurable via the config file.
-- Optional Telegram Notifications
+# DDNS Cloudflare Bash Script for OpenWRT
 
 ## Requirements
 
 - curl
+- bash
 - Cloudflare [api-token](https://dash.cloudflare.com/profile/api-tokens) with ZONE-DNS-EDIT Permissions
 - DNS Record must be pre created (api-token should only edit dns records)
 
@@ -30,44 +20,22 @@ To create a CloudFlare API token for your DNS zone go to [https://dash.cloudflar
    - Include - Specific Zone - `example.com`
 6. Complete the wizard and use the generated token at the `CLOUDFLARE_API_TOKEN` variable for the container
 
-## Installation
-
-You can place the script at any location manually.
-
-**MacOS**: Don't use the _/usr/local/bin/_ for the script location. Create a separate folder under your user path _/Users/${USER}_
-
-The automatic install examples below will place the script at _/usr/local/bin/_
-
-```shell
-wget https://raw.githubusercontent.com/fire1ce/DDNS-Cloudflare-Bash/main/update-cloudflare-dns.sh
-sudo chmod +x update-cloudflare-dns.sh
-sudo mv update-cloudflare-dns.sh /usr/local/bin/update-cloudflare-dns
-```
-
 ## Config file
 
 You can use default config file _update-cloudflare-dns.conf_ or pass your own config file as parameter to script.
 
-```shell
-wget https://raw.githubusercontent.com/fire1ce/DDNS-Cloudflare-Bash/main/update-cloudflare-dns.conf
-```
-
-Place the **config** file in the directory as the **update-cloudflare-dns** for above example at _/usr/local/bin/_
-
-```shell
-sudo mv update-cloudflare-dns.conf /usr/local/bin/update-cloudflare-dns.conf
-```
+Place the **config** file in the directory as the **update-cloudflare-dns**
 
 ## Config Parameters
 
 | **Option**                | **Example**      | **Description**                                                                                                           |
 | ------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| what_ip                   | internal         | Which IP should be used for the record: internal/external                                                                 |
+                                                             |
 | dns_record                | ddns.example.com | DNS **A** record which will be updated, you can pass multiple **A** records separated by comma                            |
 | cloudflare_zone_api_token | ChangeMe         | Cloudflare API Token **KEEP IT PRIVATE!!!!**                                                                              |
 | zoneid                    | ChangeMe         | Cloudflare's [Zone ID](https://developers.cloudflare.com/fundamentals/get-started/basic-tasks/find-account-and-zone-ids/) |
 | proxied                   | false            | Use Cloudflare proxy on dns record true/false                                                                             |
-| ttl                       | 120              | 120-7200 in seconds or 1 for Auto                                                                                         |
+| ttl                       | 120              | 60-7200 in seconds or 1 for Auto                                                                                         |
 
 
 ## Running The Script
