@@ -1,5 +1,9 @@
 # DDNS Cloudflare Bash Script for OpenWRT
 
+##Info
+This Script is a modified version and is made for OpenWRT
+Original Script: [https://github.com/fire1ce/DDNS-Cloudflare-Bash.git](https://github.com/fire1ce/DDNS-Cloudflare-Bash)
+
 ## Requirements
 
 - curl
@@ -62,25 +66,25 @@ Run every minute
 Run every 2 minutes
 
 ```shell
-*/2 * * * * /usr/local/bin/update-cloudflare-dns
+*/2 * * * * /path/to/script/update-cloudflare-dns
 ```
 
 Run at boot
 
 ```shell
-@reboot /usr/local/bin/update-cloudflare-dns
+@reboot /path/to/script/update-cloudflare-dns
 ```
 
 Run 1 minute after boot
 
 ```shell
-@reboot sleep 60 && /usr/local/bin/update-cloudflare-dns
+@reboot sleep 60 && /path/to/script/update-cloudflare-dns
 ```
 
 Run at 08:00
 
 ```shell
-0 8 * * * /usr/local/bin/update-cloudflare-dns
+0 8 * * * /path/to/script/update-cloudflare-dns
 ```
 
 ## Logs
