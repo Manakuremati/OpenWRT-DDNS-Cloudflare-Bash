@@ -69,13 +69,6 @@ sudo mv update-cloudflare-dns.conf /usr/local/bin/update-cloudflare-dns.conf
 | proxied                   | false            | Use Cloudflare proxy on dns record true/false                                                                             |
 | ttl                       | 120              | 120-7200 in seconds or 1 for Auto                                                                                         |
 
-### Optional Notifications Parameters
-
-| **Option**             | **Example** | **Description**                   |
-| ---------------------- | ----------- | --------------------------------- |
-| notify_me_telegram     | yes         | Use Telegram notifications yes/no |
-| telegram_chat_id       | ChangeMe    | Chat ID of the bot                |
-| telegram_bot_API_Token | ChangeMe    | Telegram's Bot API Token          |
 
 ## Running The Script
 
