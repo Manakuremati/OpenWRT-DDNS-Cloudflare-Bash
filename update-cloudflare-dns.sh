@@ -45,7 +45,7 @@ REIP='^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])\.){3}(25[0-5]|(2[0-4]|1[0-9]|[1-9]
 ### Get external ip from https://checkip.amazonaws.com
 ip=$(ifstatus wan |  jsonfilter -e '@["ipv4-address"][0].address')
   if [ -z "$ip" ]; then
-    echo "Error! Can't get ip
+    echo "Error! Can't get ip"
     exit 0
   fi
   if ! [[ "$ip" =~ $REIP ]]; then
