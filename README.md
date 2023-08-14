@@ -30,7 +30,6 @@ Place the **config** file in the directory as the **update-cloudflare-dns**
 
 | **Option**                | **Example**      | **Description**                                                                                                           |
 | ------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------- |
-                                                             |
 | dns_record                | ddns.example.com | DNS **A** record which will be updated, you can pass multiple **A** records separated by comma                            |
 | cloudflare_zone_api_token | ChangeMe         | Cloudflare API Token **KEEP IT PRIVATE!!!!**                                                                              |
 | zoneid                    | ChangeMe         | Cloudflare's [Zone ID](https://developers.cloudflare.com/fundamentals/get-started/basic-tasks/find-account-and-zone-ids/) |
