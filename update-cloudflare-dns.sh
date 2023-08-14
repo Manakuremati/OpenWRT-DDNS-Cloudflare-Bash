@@ -55,38 +55,16 @@ fi
 REIP='^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])\.){3}(25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])$'
 
 ### Get external ip from https://checkip.amazonaws.com
-if [ "${what_ip}" == "external" ]; then
-  ip=$(curl -4 -s -X GET https://checkip.amazonaws.com --max-time 10)
+ip=$(curl -4 -s -X GET https://your.local.gateway --max-time 10)
   if [ -z "$ip" ]; then
-    echo "Error! Can't get external ip from https://checkip.amazonaws.com"
+    echo "Error! Can't get external ip
     exit 0
   fi
   if ! [[ "$ip" =~ $REIP ]]; then
     echo "Error! IP Address returned was invalid!"
     exit 0
   fi
-  echo "==> External IP is: $ip"
-fi
-
-### Get Internal ip from primary interface
-if [ "${what_ip}" == "internal" ]; then
-  ### Check if "IP" command is present, get the ip from interface
-  if which ip >/dev/null; then
-    ### "ip route get" (linux)
-    interface=$(ip route get 1.1.1.1 | awk '/dev/ { print $5 }')
-    ip=$(ip -o -4 addr show ${interface} scope global | awk '{print $4;}' | cut -d/ -f 1)
-  ### If no "ip" command use "ifconfig" instead, to get the ip from interface
-  else
-    ### "route get" (macOS, Freebsd)
-    interface=$(route get 1.1.1.1 | awk '/interface:/ { print $2 }')
-    ip=$(ifconfig ${interface} | grep 'inet ' | awk '{print $2}')
-  fi
-  if [ -z "$ip" ]; then
-    echo "Error! Can't read ip from ${interface}"
-    exit 0
-  fi
-  echo "==> Internal ${interface} IP is: $ip"
-fi
+echo "==> External IP is: $ip"
 
 ### Build coma separated array fron dns_record parameter to update multiple A records
 IFS=',' read -d '' -ra dns_records <<<"$dns_record,"
@@ -98,14 +76,14 @@ for record in "${dns_records[@]}"; do
   if [ "${proxied}" == "false" ]; then
     ### Check if "nslookup" command is present
     if which nslookup >/dev/null; then
-      dns_record_ip=$(nslookup ${record} 1.1.1.1 | awk '/Address/ { print $2 }' | sed -n '2p')
+      dns_record_ip=$(nslookup ${record} | awk '/Address/ { print $2 }' | sed -n '2p')
     else
       ### if no "nslookup" command use "host" command
-      dns_record_ip=$(host -t A ${record} 1.1.1.1 | awk '/has address/ { print $4 }' | sed -n '1p')
+      dns_record_ip=$(host -t A ${record} | awk '/has address/ { print $4 }' | sed -n '1p')
     fi
 
     if [ -z "$dns_record_ip" ]; then
-      echo "Error! Can't resolve the ${record} via 1.1.1.1 DNS server"
+      echo "Error! Can't resolve ${record} "
       exit 0
     fi
     is_proxed="${proxied}"
