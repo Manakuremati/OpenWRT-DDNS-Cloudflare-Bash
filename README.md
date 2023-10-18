@@ -5,6 +5,8 @@ This Script is a modified version and is made for OpenWRT.
 
 Original Script: [https://github.com/fire1ce/DDNS-Cloudflare-Bash.git](https://github.com/fire1ce/DDNS-Cloudflare-Bash)
 
+Copyright© 3os.org @2020
+
 ## Requirements
 
 - curl
@@ -102,8 +104,6 @@ Example:
 ## Limitations
 
 - Does not support IPv6
-
-## Copyright© 3os.org @2020
 
 
 <!-- urls -->
