@@ -103,6 +103,8 @@ Example:
 
 - Does not support IPv6
 
+## Copyright© 3os.org @2020
+
 
 <!-- urls -->
 <!-- appendices -->
