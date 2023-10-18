@@ -11,18 +11,21 @@ LOG_FILE=${parent_path}'/update-cloudflare-dns.log'
 
 ### Write last run of STDOUT & STDERR as log file and prints to screen
 exec > >(tee "$LOG_FILE") 2>&1
-echo "==> $(date "+%Y-%m-%d %H:%M:%S")"
+echo "$(date "+%Y-%m-%d %H:%M:%S")"
+logger -p notice "$(date "+%Y-%m-%d %H:%M:%S")"
 
 ### Validate if config-file exists
 
 if [[ -z "$1" ]]; then
   if ! source "${parent_path}"/update-cloudflare-dns.conf; then
-    echo 'Error! Missing configuration file update-cloudflare-dns.conf or invalid syntax!'
+    echo "Error! Missing configuration file update-cloudflare-dns.conf or invalid syntax!"
+	logger -p notice "Error! Missing configuration file update-cloudflare-dns.conf or invalid syntax!"
     exit 0
   fi
 else
   if ! source "${parent_path}"/"$1"; then
     echo "Error! Missing configuration file "$1" or invalid syntax!"
+	logger -p notice "Error! Missing configuration file "$1" or invalid syntax!"
     exit 0
   fi
 fi
@@ -30,29 +33,34 @@ fi
 ### Check validity of "ttl" parameter
 if [ "${ttl}" -lt 60 ] || [ "${ttl}" -gt 7200 ] && [ "${ttl}" -ne 1 ]; then
   echo "Error! ttl out of range (60-7200) or not set to 1"
+  logger -p notice "Error! ttl out of range (60-7200) or not set to 1"
   exit
 fi
 
 ### Check validity of "proxied" parameter
 if [ "${proxied}" != "false" ] && [ "${proxied}" != "true" ]; then
   echo 'Error! Incorrect "proxied" parameter, choose "true" or "false"'
+  logger -p notice 'Error! Incorrect "proxied" parameter, choose "true" or "false"'
   exit 0
 fi
 
 ### Valid IPv4 Regex
 REIP='^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])\.){3}(25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])$'
 
-### Get external ip from https://checkip.amazonaws.com
+### Get internal IP
 ip=$(ifstatus wan |  jsonfilter -e '@["ipv4-address"][0].address')
   if [ -z "$ip" ]; then
     echo "Error! Can't get ip"
+	logger -p notice "Error! Can't get ip"
     exit 0
   fi
   if ! [[ "$ip" =~ $REIP ]]; then
     echo "Error! IP Address returned was invalid!"
+	logger -p notice "Error! IP Address returned was invalid!"
     exit 0
   fi
-echo "==> IP is: $ip"
+echo "IP is: $ip"
+logger -p notice "IP is: $ip"
 
 ### Build coma separated array fron dns_record parameter to update multiple A records
 IFS=',' read -d '' -ra dns_records <<<"$dns_record,"
@@ -71,7 +79,8 @@ for record in "${dns_records[@]}"; do
     fi
 
     if [ -z "$dns_record_ip" ]; then
-      echo "Error! Can't resolve ${record} "
+      echo "Error! Cannot resolve ${record}"
+	  logger -p notice "Error! Cannot resolve ${record}"
       exit 0
     fi
     is_proxed="${proxied}"
@@ -84,7 +93,9 @@ for record in "${dns_records[@]}"; do
       -H "Content-Type: application/json")
     if [[ ${dns_record_info} == *"\"success\":false"* ]]; then
       echo "${dns_record_info}"
-      echo "Error! Can't get dns record info from Cloudflare API"
+	  logger -p notice "${dns_record_info}"
+      echo "Error! Cannot get dns record info from Cloudflare API"
+	  logger -p notice "Error! Cannot get dns record info from Cloudflare API"
       exit 0
     fi
     is_proxed=$(echo "${dns_record_info}" | grep -o '"proxied":[^,]*' | grep -o '[^:]*$')
@@ -93,11 +104,13 @@ for record in "${dns_records[@]}"; do
 
   ### Check if ip or proxy have changed
   if [ ${dns_record_ip} == "${ip}" ] && [ "${is_proxed}" == "${proxied}" ]; then
-    echo "==> DNS record IP of ${record} is ${dns_record_ip}", no changes needed.
+    echo "DNS record IP of ${record} is ${dns_record_ip} , no changes needed."
+	logger -p notice "DNS record IP of ${record} is ${dns_record_ip} , no changes needed."
     continue
   fi
 
-  echo "==> DNS record of ${record} is: ${dns_record_ip}. Trying to update..."
+  echo "DNS record of ${record} is: ${dns_record_ip}. Trying to update..."
+  logger -p notice "DNS record of ${record} is: ${dns_record_ip}. Trying to update..."
 
   ### Get the dns record information from Cloudflare API
   cloudflare_record_info=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$zoneid/dns_records?type=A&name=$record" \
@@ -105,7 +118,9 @@ for record in "${dns_records[@]}"; do
     -H "Content-Type: application/json")
   if [[ ${cloudflare_record_info} == *"\"success\":false"* ]]; then
     echo "${cloudflare_record_info}"
-    echo "Error! Can't get ${record} record information from Cloudflare API"
+	logger -p notice "${cloudflare_record_info}"
+    echo "Error! Cannot get ${record} record information from Cloudflare API"
+	logger -p notice "Error! Cannot get ${record} record information from Cloudflare API"
     exit 0
   fi
 
@@ -119,10 +134,14 @@ for record in "${dns_records[@]}"; do
     --data "{\"type\":\"A\",\"name\":\"$record\",\"content\":\"$ip\",\"ttl\":$ttl,\"proxied\":$proxied}")
   if [[ ${update_dns_record} == *"\"success\":false"* ]]; then
     echo "${update_dns_record}"
+	logger -p notice "${update_dns_record}"
     echo "Error! Update failed"
+	logger -p notice "Error! Update failed"
     exit 0
   fi
 
-  echo "==> Success!"
-  echo "==> $record DNS Record updated to: $ip, ttl: $ttl, proxied: $proxied"
+  echo "Success!"
+  logger -p notice "Success!"
+  echo "$record DNS Record updated to: $ip, ttl: $ttl, proxied: $proxied"
+  logger -p notice "$record DNS Record updated to: $ip, ttl: $ttl, proxied: $proxied"
 done
