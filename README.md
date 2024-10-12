@@ -41,7 +41,7 @@ Place the **config** file in the directory as the **update-cloudflare-dns**
 | cloudflare_zone_api_token | ChangeMe         | Cloudflare API Token **KEEP IT PRIVATE!!!!**                                                                              |
 | zoneid                    | ChangeMe         | Cloudflare's [Zone ID](https://developers.cloudflare.com/fundamentals/get-started/basic-tasks/find-account-and-zone-ids/) |
 | proxied                   | false            | Use Cloudflare proxy on dns record true/false                                                                             |
-| ttl                       | 120              | 60-7200 in seconds or 1 for Auto                                                                                         |
+| ttl                       | 120              | 60-86400 in seconds or 1 for Auto                                                                                         |
 
 
 ## Running The Script
