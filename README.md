@@ -90,17 +90,6 @@ Run at 08:00
 0 8 * * * /path/to/script/update-cloudflare-dns
 ```
 
-## Logs
-
-This Script will create a log file with **only** the last run information
-Log file will be located at the script's location.
-
-Example:
-
-```bash
-/path/to/script/update-cloudflare-dns.log
-```
-
 ## Limitations
 
 - Does not support IPv6
