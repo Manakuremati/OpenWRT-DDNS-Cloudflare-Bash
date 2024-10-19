@@ -73,22 +73,22 @@ for record in "${dns_records[@]}"; do
 	  logger -p notice "Error! Cannot get dns record info from Cloudflare API"
       exit 0
     fi
-    is_proxed=$(echo "${dns_record_info}" | grep -o '"proxied":[^,]*' | grep -o '[^:]*$')
-    dns_record_ip=$(echo "${dns_record_info}" | grep -o '"content":"[^"]*' | cut -d'"' -f 4)
-    dns_record_id=$(echo "${dns_record_info}" | grep -o '"id":"[^"]*' | cut -d'"' -f4)
+    cloud_proxied=$(echo "${dns_record_info}" | grep -o '"proxied":[^,]*' | grep -o '[^:]*$')
+    cloud_ip=$(echo "${dns_record_info}" | grep -o '"content":"[^"]*' | cut -d'"' -f 4)
+    cloud_id=$(echo "${dns_record_info}" | grep -o '"id":"[^"]*' | cut -d'"' -f4)
 
   ### Check if ip or proxy have changed
-  if [ ${dns_record_ip} == "${ip}" ] && [ "${is_proxed}" == "${proxied}" ]; then
-    echo "DNS record IP of ${record} is ${dns_record_ip} , no changes needed."
-	logger -p notice "DNS record IP of ${record} is ${dns_record_ip} , no changes needed."
+  if [ ${cloud_ip} == "${ip}" ] && [ "${cloud_proxied}" == "${proxied}" ]; then
+    echo "DNS record IP of ${record} is ${cloud_ip} , no changes needed."
+	logger -p notice "DNS record IP of ${record} is ${cloud_ip} , no changes needed."
     continue
   fi
 
-  echo "DNS record of ${record} is: ${dns_record_ip}. Trying to update..."
-  logger -p notice "DNS record of ${record} is: ${dns_record_ip}. Trying to update..."
+  echo "DNS record of ${record} is: ${cloud_ip}. Trying to update..."
+  logger -p notice "DNS record of ${record} is: ${cloud_ip}. Trying to update..."
 
   ### Push new dns record information to Cloudflare API
-  update_dns_record=$(curl -s -X PUT "https://api.cloudflare.com/client/v4/zones/$zoneid/dns_records/$dns_record_id" \
+  update_dns_record=$(curl -s -X PUT "https://api.cloudflare.com/client/v4/zones/$zoneid/dns_records/$cloud_id" \
     -H "Authorization: Bearer $cloudflare_zone_api_token" \
     -H "Content-Type: application/json" \
     --data "{\"type\":\"A\",\"name\":\"$record\",\"content\":\"$ip\",\"ttl\":$ttl,\"proxied\":$proxied}")
