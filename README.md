@@ -1,6 +1,5 @@
-# DDNS Cloudflare Bash Script for OpenWrt
+DDNS Cloudflare Bash Script for OpenWrt
 
-## Info
 This Script is a modified version for OpenWrt with the following changes:
  - The WAN IP is pulled from the wan interface
  - The DDNS Value is taken via cloudflare API instead of nslookup
